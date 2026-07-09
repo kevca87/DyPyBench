@@ -157,12 +157,12 @@ if __name__ == '__main__':
                 else:
                     print("WE HERE IN PY SCRIPT 3")
                     print("/DyPyBench/scripts/run-test.sh %s %s %s %s %s" %(proj_name, proj_no, proj_test_folder, copy_folder, args.timeout))
-                    output = subprocess.run(["/DyPyBench/scripts/run-test.sh %s %s %s %s %s" %(proj_name, proj_no, proj_test_folder, copy_folder, args.timeout)
-                    ], shell=True, capture_output=True, timeout=args.timeout)
+                    # output = subprocess.run(["/DyPyBench/scripts/run-test.sh %s %s %s %s %s" %(proj_name, proj_no, proj_test_folder, copy_folder, args.timeout)
+                    # ], shell=True, capture_output=True, timeout=args.timeout)
                     
                     #if output needs to be printed on the console then comment above and uncomment below
-                    """output = subprocess.run(["/DyPyBench/scripts/run-test.sh %s %s %s %s %s" %(proj_name, proj_no, proj_test_folder, copy_folder, args.timeout)
-                    ], shell=True, stderr=subprocess.STDOUT, timeout=args.timeout)"""
+                    output = subprocess.run(["/DyPyBench/scripts/run-test.sh %s %s %s %s %s" %(proj_name, proj_no, proj_test_folder, copy_folder, args.timeout)
+                    ], shell=True, stderr=subprocess.STDOUT, timeout=args.timeout)
 
     if args.dynapyt_instrument:
         projects = args.dynapyt_instrument

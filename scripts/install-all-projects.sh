@@ -65,8 +65,10 @@ do
     unset VIRTUAL_ENV PYTHONHOME
     hash -r
     #create virtual env name .vm, pinned to the system interpreter so the base
-    #can never resolve to another project's .vm
-    virtualenv -p /usr/bin/python3 .vm
+    #can never resolve to another project's .vm. Invoke the module via
+    #"python3 -m" so a contaminated /usr/local/bin/virtualenv launcher (whose
+    #shebang may point into a project's .vm) is bypassed entirely.
+    python3 -m virtualenv -p /usr/bin/python3 .vm
     #fail loudly if the venv base is not the system python
     if ! grep -qE '^home = /usr' .vm/pyvenv.cfg
     then

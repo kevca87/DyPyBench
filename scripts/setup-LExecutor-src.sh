@@ -15,7 +15,9 @@ then
     deactivate 2>/dev/null || true
     unset VIRTUAL_ENV PYTHONHOME
     hash -r
-    virtualenv -p /usr/bin/python3 .vm
+    #invoke via "python3 -m" so a contaminated /usr/local/bin/virtualenv
+    #launcher shebang is bypassed entirely
+    python3 -m virtualenv -p /usr/bin/python3 .vm
     if ! grep -qE '^home = /usr' .vm/pyvenv.cfg
     then
         echo "ERROR: LExecutor .vm was not created from the system python:"
