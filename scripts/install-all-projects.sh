@@ -57,8 +57,23 @@ do
     CHECKOUT_ID=$(git log -n 1 --until=2023-01-18 --format="%H")
     #checkout the project to this date
     git checkout $CHECKOUT_ID
-    #create virtual env name .vm
-    virtualenv .vm
+    #make sure no other project's virtualenv is still active before creating a
+    #new one -- otherwise virtualenv seeds the base interpreter from the active
+    #env and this .vm ends up pointing at another project's .vm
+    #(e.g. project10 -> project1). See pyvenv.cfg "home"/"base-executable".
+    deactivate 2>/dev/null || true
+    unset VIRTUAL_ENV PYTHONHOME
+    hash -r
+    #create virtual env name .vm, pinned to the system interpreter so the base
+    #can never resolve to another project's .vm
+    virtualenv -p /usr/bin/python3 .vm
+    #fail loudly if the venv base is not the system python
+    if ! grep -qE '^home = /usr' .vm/pyvenv.cfg
+    then
+        echo "ERROR: project$idx .vm was not created from the system python:"
+        grep -E '^(home|base-executable)' .vm/pyvenv.cfg
+        exit 1
+    fi
     #activate virtual env
     if [[ -d ".vm/local" ]]
     then
