@@ -1,0 +1,10 @@
+Pillow
+celery
+errbot
+flask-api
+geopy
+grab
+moviepy
+pyquery
+uvicorn
+zerorpc-python

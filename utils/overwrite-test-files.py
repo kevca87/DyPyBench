@@ -1,6 +1,7 @@
 import subprocess
 import csv
 import os
+import sys
 
 def setupProjects():
     global data
@@ -34,12 +35,21 @@ if __name__ == '__main__':
 
     setupProjects()
     path = '/DyPyBench/overwrite_files'
-    override_folder = os.listdir(path)
+    # Apply exactly the overwrites listed in text/overwrites.txt. This used to
+    # iterate os.listdir(path) and crash on the first folder not in
+    # github-url.txt (websockets, python-ftfy), so which overwrites got applied
+    # depended on the filesystem's directory order. overwrites.txt is the set
+    # the published dypybench:projects image ended up with.
+    with open("/DyPyBench/text/overwrites.txt", "r") as f:
+        override_folder = [line.strip() for line in f if line.strip()]
 
     for dir in override_folder:
-        p1 = os.path.join(path, dir) 
-        p2 = '/DyPyBench/../Project/project' + get_project_no(dir)
+        p1 = os.path.join(path, dir)
+        no = get_project_no(dir)
+        if no is None or not os.path.isdir(p1):
+            sys.exit('ERROR: overwrite "' + dir + '" has no project in github-url.txt or no folder in ' + path)
+        p2 = '/DyPyBench/../Project/project' + no
         command = 'cp -r ' + p1 + '/. ' + p2 + '/.'
         print(command)
-        output = subprocess.run([command
-            ], shell=True, stderr=subprocess.STDOUT)
+        subprocess.run([command
+            ], shell=True, stderr=subprocess.STDOUT, check=True)
